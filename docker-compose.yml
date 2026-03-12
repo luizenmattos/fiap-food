@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: autenticacao-db
+    environment:
+      POSTGRES_DB: autenticacao
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: psql
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d autenticacao"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: ./autenticacao/
+      dockerfile: Dockerfile
+    container_name: autenticacao-app
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/autenticacao
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: psql
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      API_SECURITY_TOKEN_SECRET: minha_chave_super_secreta_jwt_123
+
+  kong:
+    image: kong:3.8
+    container_name: autenticacao-kong
+    depends_on:
+      - app
+    ports:
+      - "8000:8000"
+    environment:
+      KONG_DATABASE: off
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    volumes:
+      - ./kong/kong.yml:/etc/kong/kong.yml:ro
+
+volumes:
+  pgdata:
