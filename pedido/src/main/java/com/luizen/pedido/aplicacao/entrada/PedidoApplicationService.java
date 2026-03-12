@@ -7,6 +7,8 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.luizen.pedido.aplicacao.entrada.token.TokenService;
+import com.luizen.pedido.aplicacao.entrada.token.UsuarioToken;
 import com.luizen.pedido.dominio.Pedido;
 import com.luizen.pedido.dominio.Produto;
 import com.luizen.pedido.dominio.repositories.PedidoRepository;
@@ -19,16 +21,18 @@ public class PedidoApplicationService {
     private static final MyLogger logger = MyLogger.getInstance(PedidoApplicationService.class);
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
+    private final TokenService tokenService;
 
-    public PedidoApplicationService(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository) {
+    public PedidoApplicationService(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, TokenService tokenService) {
         this.pedidoRepository = pedidoRepository;
-        this.produtoRepository = produtoRepository; 
+        this.produtoRepository = produtoRepository;
+        this.tokenService = tokenService;
     }
 
     public Pedido realizarPedido(RealizarPedidoInput input){
         try{    
             //obter o usuário a partir do token
-            // var jwt = input.token();
+            UsuarioToken usuarioToken = tokenService.obterDadosDoToken(input.token());
             
             // converter itens do input para Map<UUID, Integer> 
             List<UUID> produtoIds = input.itens().stream().map(item -> UUID.fromString(item.produtoId())).toList();
@@ -36,8 +40,7 @@ public class PedidoApplicationService {
                 .stream().collect(Collectors.toMap(Produto::getId, Function.identity()));
 
             //cria pedido
-            var clienteId = "123";
-            Pedido pedido = Pedido.novoPedido(clienteId, input.restauranteId());
+            Pedido pedido = Pedido.novoPedido(usuarioToken.id().toString(), input.restauranteId());
             
             //adicionar itens ao pedido
             for(int i = 0; i < input.itens().size(); i++){
