@@ -1,5 +1,5 @@
 services:
-  db:
+  autenticacao-db:
     image: postgres:16-alpine
     container_name: autenticacao-db
     environment:
@@ -7,25 +7,53 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: psql
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - autenticacao-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d autenticacao"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  app:
+  autenticacao-service:
     build:
       context: ./autenticacao/
       dockerfile: Dockerfile
-    container_name: autenticacao-app
+    container_name: autenticacao-service
     depends_on:
-      db:
+      autenticacao-db:
         condition: service_healthy
-    ports:
-      - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/autenticacao
+      SPRING_DATASOURCE_URL: jdbc:postgresql://autenticacao-db:5432/autenticacao
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: psql
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      API_SECURITY_TOKEN_SECRET: minha_chave_super_secreta_jwt_123
+
+  pedido-db:
+    image: postgres:16-alpine
+    container_name: pedido-db
+    environment:
+      POSTGRES_DB: pedido
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: psql
+    volumes:
+      - pedido-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pedido"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pedido-service: 
+    build:
+      context: ./pedido/
+      dockerfile: Dockerfile
+    container_name: pedido-service
+    depends_on:
+      pedido-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pedido-db:5432/pedido
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: psql
       SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
@@ -33,9 +61,10 @@ services:
 
   kong:
     image: kong:3.8
-    container_name: autenticacao-kong
+    container_name: gateway-kong
     depends_on:
-      - app
+      - autenticacao-service
+      - pedido-service
     ports:
       - "8000:8000"
     environment:
@@ -50,4 +79,5 @@ services:
       - ./kong/kong.yml:/etc/kong/kong.yml:ro
 
 volumes:
-  pgdata:
+  autenticacao-data:
+  pedido-data:

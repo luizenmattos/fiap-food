@@ -2,10 +2,20 @@ _format_version: "3.0"
 _transform: true
 
 services:
-  - name: autenticacao-app
-    url: http://app:8080
+  - name: autenticacao-service
+    url: http://autenticacao-service:8080
     routes:
       - name: autenticacao-route
         paths:
-          - /
+          - /registrar
+          - /autenticar
+        strip_path: false
+
+  - name: pedido-service
+    url: http://pedido-service:8081
+    routes:
+      - name: pedido-route
+        paths:
+          - /pedidos
+          - /produtos
         strip_path: false
