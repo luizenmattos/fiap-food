@@ -27,7 +27,7 @@ public class TokenService {
             
             return JWT.create()
                     .withIssuer("Luizen Auth API") // Identifica quem emitiu o token
-                    .withSubject(usuario.getEmail()) // Identifica o dono do token (geralmente e-mail ou ID)
+                    .withSubject(usuario.getId().toString()) // Identifica o dono do token (geralmente e-mail ou ID)
                     .withClaim("papel", usuario.getPapel().name()) // <-- Identificar o papel do usuário no token
                     .withExpiresAt(gerarDataExpiracao()) // Define quando o token perde a validade
                     .sign(algoritmo); // Assina e gera a string final
