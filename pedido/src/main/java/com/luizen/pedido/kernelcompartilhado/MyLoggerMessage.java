@@ -17,7 +17,7 @@ public record MyLoggerMessage(LocalDateTime horario, String status, String event
     }
 
     public String getStructuredLogging() {
-        String log = " horario=" + horario.toString() 
+        String log = "horario=" + horario.toString() 
                    + " status=" + status 
                    + " evento=" + evento;
 
