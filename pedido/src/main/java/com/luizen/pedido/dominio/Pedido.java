@@ -29,7 +29,11 @@ public class Pedido {
 
     public void adicionarItem(Produto produto, BigDecimal quantidade) {
         PedidoItem item = PedidoItem.novoItem(produto, quantidade);
-        itens.add(item);
+        if(itens != null){
+            itens.add(item);
+        } else {
+            itens = List.of(item);
+        }
     }
 
     public BigDecimal valorTotal(){

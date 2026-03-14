@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.luizen.pedido.aplicacao.entrada.ApplicationException;
 import com.luizen.pedido.aplicacao.entrada.token.TokenService;
 import com.luizen.pedido.aplicacao.entrada.token.UsuarioToken;
 import com.luizen.pedido.dominio.Pedido;
@@ -46,12 +47,15 @@ public class PedidoApplicationService {
             for(int i = 0; i < input.itens().size(); i++){
                 var itemInput = input.itens().get(i);
                 var produto = produtos.get(UUID.fromString(itemInput.produtoId()));
+                if(produto == null){
+                    throw new ApplicationException("Produto não encontrado: " + itemInput.produtoId());
+                }
                 pedido.adicionarItem(produto, BigDecimal.valueOf(itemInput.quantidade()));
             }
 
             //salvar pedido
             var pedidoSalvo = pedidoRepository.salvar(pedido)
-                .orElseThrow(() -> new RuntimeException("Erro ao salvar pedido"));
+                .orElseThrow(() -> new ApplicationException("Erro ao salvar pedido"));
 
             //Log do evento
             logger.info(MyLoggerMessage.of("SUCESSO", "REALIZAR_PEDIDO", Map.of(
