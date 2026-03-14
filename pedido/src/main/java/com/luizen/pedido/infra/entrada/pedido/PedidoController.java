@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.luizen.pedido.aplicacao.entrada.PedidoApplicationService;
-import com.luizen.pedido.aplicacao.entrada.RealizarPedidoInput;
+import com.luizen.pedido.aplicacao.entrada.pedido.PedidoApplicationService;
+import com.luizen.pedido.aplicacao.entrada.pedido.RealizarPedidoInput;
 import com.luizen.pedido.dominio.Pedido;
 import com.luizen.pedido.infra.entrada.ApiResponse;
 
