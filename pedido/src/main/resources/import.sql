@@ -1,2 +1,2 @@
-INSERT INTO produtos (id,nome, preco) VALUES (gen_random_uuid(),'Monitor 4K', 2000.0);
-INSERT INTO produtos (id,nome, preco) VALUES (gen_random_uuid(),'Cadeira Ergonômica', 1200.0);
+INSERT INTO produtos (id,nome, preco) VALUES ('b43aa00e-8549-425e-84c0-8d8ea6b0ff11','Monitor 4K', 2000.0);
+INSERT INTO produtos (id,nome, preco) VALUES ('42ad886f-1baf-43e5-81e4-0af2d1ed89b1','Cadeira Ergonômica', 1200.0);
