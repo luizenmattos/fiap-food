@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.luizen.pedido.aplicacao.entrada.pedido.PedidoApplicationService;
+import com.luizen.pedido.aplicacao.entrada.pedido.RealizarPedidoUseCase;
 import com.luizen.pedido.aplicacao.entrada.pedido.RealizarPedidoInput;
 import com.luizen.pedido.dominio.Pedido;
 import com.luizen.pedido.infra.entrada.ApiResponse;
@@ -16,10 +16,10 @@ import com.luizen.pedido.infra.entrada.ApiResponse;
 @RestController
 public class PedidoController {
 
-    private final PedidoApplicationService pedidoApplicationService;
+    private final RealizarPedidoUseCase realizarPedido;
     
-    public PedidoController(PedidoApplicationService pedidoApplicationService) {
-        this.pedidoApplicationService = pedidoApplicationService;
+    public PedidoController(RealizarPedidoUseCase realizarPedido) {
+        this.realizarPedido = realizarPedido;
     }
 
     @PostMapping("/pedidos")
@@ -34,7 +34,7 @@ public class PedidoController {
             request.itens().stream().map(item -> new RealizarPedidoInput.PedidoItemInput(item.produtoId(), item.quantidade())).toList()
         );
 
-        Pedido pedido = pedidoApplicationService.realizarPedido(input);
+        Pedido pedido = realizarPedido.executar(input);
 
         return ResponseEntity.ok(new ApiResponse(
             "success", 

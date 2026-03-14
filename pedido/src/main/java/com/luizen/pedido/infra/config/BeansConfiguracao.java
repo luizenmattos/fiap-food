@@ -1,6 +1,6 @@
 package com.luizen.pedido.infra.config;
 
-import com.luizen.pedido.aplicacao.entrada.pedido.PedidoApplicationService;
+import com.luizen.pedido.aplicacao.entrada.pedido.RealizarPedidoUseCase;
 import com.luizen.pedido.aplicacao.entrada.produto.ProdutoApplicationService;
 import com.luizen.pedido.aplicacao.entrada.token.TokenService;
 import com.luizen.pedido.dominio.repositories.PedidoRepository;
@@ -19,8 +19,8 @@ public class BeansConfiguracao {
     }
 
     @Bean
-    public PedidoApplicationService pedidoApplicationService(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, TokenService tokenService) {
-        return new PedidoApplicationService(pedidoRepository, produtoRepository, tokenService);
+    public RealizarPedidoUseCase realizarPedido(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, TokenService tokenService) {
+        return new RealizarPedidoUseCase(pedidoRepository, produtoRepository, tokenService);
     }
     
     @Bean

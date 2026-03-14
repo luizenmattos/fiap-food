@@ -17,20 +17,20 @@ import com.luizen.pedido.dominio.repositories.ProdutoRepository;
 import com.luizen.pedido.kernelcompartilhado.MyLogger;
 import com.luizen.pedido.kernelcompartilhado.MyLoggerMessage;
 
-public class PedidoApplicationService {
+public class RealizarPedidoUseCase {
 
-    private static final MyLogger logger = MyLogger.getInstance(PedidoApplicationService.class);
+    private static final MyLogger logger = MyLogger.getInstance(RealizarPedidoUseCase.class);
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
     private final TokenService tokenService;
 
-    public PedidoApplicationService(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, TokenService tokenService) {
+    public RealizarPedidoUseCase(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, TokenService tokenService) {
         this.pedidoRepository = pedidoRepository;
         this.produtoRepository = produtoRepository;
         this.tokenService = tokenService;
     }
 
-    public Pedido realizarPedido(RealizarPedidoInput input){
+    public Pedido executar(RealizarPedidoInput input){
         try{    
             //obter o usuário a partir do token
             UsuarioToken usuarioToken = tokenService.obterDadosDoToken(input.token());
