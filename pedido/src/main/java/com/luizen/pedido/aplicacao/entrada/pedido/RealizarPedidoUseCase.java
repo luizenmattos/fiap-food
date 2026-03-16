@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.luizen.pedido.aplicacao.entrada.ApplicationException;
 import com.luizen.pedido.aplicacao.entrada.token.TokenService;
 import com.luizen.pedido.aplicacao.entrada.token.UsuarioToken;
+import com.luizen.pedido.aplicacao.saida.EventoPedidoCriado;
 import com.luizen.pedido.dominio.Pedido;
 import com.luizen.pedido.dominio.Produto;
 import com.luizen.pedido.dominio.repositories.PedidoRepository;
@@ -23,11 +24,13 @@ public class RealizarPedidoUseCase {
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
     private final TokenService tokenService;
+    private final EventoPedidoCriado eventoPedidoCriado;
 
-    public RealizarPedidoUseCase(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, TokenService tokenService) {
+    public RealizarPedidoUseCase(PedidoRepository pedidoRepository, ProdutoRepository produtoRepository, TokenService tokenService, EventoPedidoCriado eventoPedidoCriado) {
         this.pedidoRepository = pedidoRepository;
         this.produtoRepository = produtoRepository;
         this.tokenService = tokenService;
+        this.eventoPedidoCriado = eventoPedidoCriado;
     }
 
     public Pedido executar(RealizarPedidoInput input){
@@ -66,6 +69,8 @@ public class RealizarPedidoUseCase {
                         "quantidade", item.quantidade()
                     )).toList().toString()
             )));
+            
+            eventoPedidoCriado.dispararEvento(pedidoSalvo.getId().toString(), pedidoSalvo.valorTotal());
 
             return pedidoSalvo;
             
