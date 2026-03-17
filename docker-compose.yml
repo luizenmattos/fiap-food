@@ -65,6 +65,20 @@ services:
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
 
+  pagamento-service:
+    build:
+      context: ./pagamento/
+      dockerfile: Dockerfile
+    container_name: pagamento-service
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
     container_name: rabbitmq
@@ -83,6 +97,7 @@ services:
     depends_on:
       - autenticacao-service
       - pedido-service
+      - pagamento-service
     ports:
       - "8000:8000"
     environment:

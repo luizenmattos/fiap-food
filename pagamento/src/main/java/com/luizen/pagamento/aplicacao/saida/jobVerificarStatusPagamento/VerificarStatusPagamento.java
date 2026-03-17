@@ -21,9 +21,9 @@ public class VerificarStatusPagamento {
         Status statusPagamento = pagamentoExternoService.verificarStatusPagamento(null);
 
         if(statusPagamento == Status.APROVADO) {
-            eventoPagamentoAprovado.notificarPagamentoAprovado(null);
+            eventoPagamentoAprovado.notificarPagamentoAprovado("null");
         } else if(statusPagamento == Status.REJEITADO) {
-            eventoPagamentoRejeitado.notificarPagamentoRejeitado(null);
+            eventoPagamentoRejeitado.notificarPagamentoRejeitado("null");
         }
     }
 }
