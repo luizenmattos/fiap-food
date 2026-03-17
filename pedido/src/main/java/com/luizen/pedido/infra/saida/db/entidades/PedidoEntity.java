@@ -26,7 +26,6 @@ public class PedidoEntity {
     @Column(nullable = false)
     public UUID restauranteId;
 
-    //TODO: COMEÇAR DAQUII -> FOI FEITO O TESTE E ESTÁ CRIANDO AS CLASSES CORRETAMENTE
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<PedidoItemEntity> itens;
 
