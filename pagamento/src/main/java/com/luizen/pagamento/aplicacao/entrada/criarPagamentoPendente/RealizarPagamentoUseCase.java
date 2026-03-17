@@ -7,18 +7,15 @@ import com.luizen.pagamento.aplicacao.saida.eventoPagamentoPendente.EventoPagame
 import com.luizen.pagamento.aplicacao.saida.eventoPagamentoRejeitado.EventoPagamentoRejeitado;
 import com.luizen.pagamento.aplicacao.saida.servicoPagamentoExterno.PagamentoExternoService;
 import com.luizen.pagamento.dominio.Pagamento;
-import com.luizen.pagamento.dominio.PagamentoRepository;
 
 public class RealizarPagamentoUseCase {
     
     public EventoPagamentoRejeitado eventoPagamentoRejeitado;
-    public PagamentoRepository pagamentoRepositorio;
     public PagamentoExternoService pagamentoExternoService;
     public EventoPagamentoPendente eventoPagamentoPendente;
     public EventoPagamentoAprovado eventoPagamentoAprovado;
     
-    public RealizarPagamentoUseCase(PagamentoRepository pagamentoRepositorio, PagamentoExternoService pagamentoExternoService, EventoPagamentoPendente eventoPagamentoPendente, EventoPagamentoAprovado eventoPagamentoAprovado, EventoPagamentoRejeitado eventoPagamentoRejeitado) {
-        this.pagamentoRepositorio = pagamentoRepositorio;
+    public RealizarPagamentoUseCase(PagamentoExternoService pagamentoExternoService, EventoPagamentoPendente eventoPagamentoPendente, EventoPagamentoAprovado eventoPagamentoAprovado, EventoPagamentoRejeitado eventoPagamentoRejeitado) {
         this.pagamentoExternoService = pagamentoExternoService; 
         this.eventoPagamentoPendente = eventoPagamentoPendente;
         this.eventoPagamentoAprovado = eventoPagamentoAprovado;
@@ -33,16 +30,17 @@ public class RealizarPagamentoUseCase {
             pagamento.aprovar();
         } 
         
-        Pagamento pagamentoSalvo = pagamentoRepositorio.salvar(pagamento).orElse(null);
+        // Pagamento pagamentoSalvo = pagamentoRepositorio.salvar(pagamento).orElse(null);
+        Pagamento pagamentoSalvo = pagamento; // Simulando o salvamento do pagamento, já que o repositório não está implementado
         
         if (pagamentoSalvo.pendente()) {
-            eventoPagamentoPendente.notificarPagamentoPendente(null);
+            eventoPagamentoPendente.notificarPagamentoPendente("null");
 
         }else if (pagamentoSalvo.aprovado()) {
-            eventoPagamentoAprovado.notificarPagamentoAprovado(null);
+            eventoPagamentoAprovado.notificarPagamentoAprovado("null");
         
         } else if (pagamentoSalvo.rejeitado()) {
-            eventoPagamentoRejeitado.notificarPagamentoRejeitado(null);
+            eventoPagamentoRejeitado.notificarPagamentoRejeitado("null");
         }
         
         return pagamentoSalvo;

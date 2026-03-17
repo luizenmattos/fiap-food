@@ -8,14 +8,17 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.luizen.pagamento.aplicacao.entrada.criarPagamentoPendente.RealizarPagamentoUseCase;
 import com.luizen.pagamento.aplicacao.saida.eventoPagamentoPendente.EventoPagamentoPendente;
 import com.luizen.pagamento.aplicacao.saida.jobVerificarStatusPagamento.VerificarStatusPagamento;
 import com.luizen.pagamento.aplicacao.saida.eventoPagamentoAprovado.EventoPagamentoAprovado;
 import com.luizen.pagamento.aplicacao.saida.eventoPagamentoRejeitado.EventoPagamentoRejeitado;
+import com.luizen.pagamento.infra.entrada.rabbitmq.PedidoCriadoConsumer;
 import com.luizen.pagamento.aplicacao.saida.servicoPagamentoExterno.PagamentoExternoService;
 import com.luizen.pagamento.infra.saida.http.PagamentoExternoFiapService;
 import com.luizen.pagamento.infra.saida.rabbitmq.PagamentoAprovado;
@@ -47,6 +50,15 @@ public class BeansConfiguracao {
     @Value("${app.rabbitmq.pagamento-rejeitado.routing-key:pagamento.rejeitado}")
     private String pagamentoRejeitadoRoutingKey;
 
+    @Value("${app.rabbitmq.pedido-criado.exchange:pedido.exchange}")
+    private String pedidoCriadoExchange;
+
+    @Value("${app.rabbitmq.pedido-criado.queue:pedido.criado.queue}")
+    private String pedidoCriadoQueue;
+
+    @Value("${app.rabbitmq.pedido-criado.routing-key:pedido.criado}")
+    private String pedidoCriadoRoutingKey;
+
     @Bean
     public MessageConverter rabbitMessageConverter() {
         return new Jackson2JsonMessageConverter();
@@ -65,6 +77,11 @@ public class BeansConfiguracao {
     }
 
     @Bean
+    public DirectExchange pedidoCriadoExchange() {
+        return new DirectExchange(pedidoCriadoExchange);
+    }
+
+    @Bean
     public Queue pagamentoPendenteQueue() {
         return new Queue(pagamentoPendenteQueue, true);
     }
@@ -80,18 +97,40 @@ public class BeansConfiguracao {
     }
 
     @Bean
-    public Binding pagamentoPendenteBinding(Queue pagamentoPendenteQueue, DirectExchange pagamentoExchange) {
+    public Queue pedidoCriadoQueue() {
+        return new Queue(pedidoCriadoQueue, true);
+    }
+
+    @Bean
+    public Binding pagamentoPendenteBinding(
+        @Qualifier("pagamentoPendenteQueue") Queue pagamentoPendenteQueue,
+        @Qualifier("pagamentoExchange") DirectExchange pagamentoExchange
+    ) {
         return BindingBuilder.bind(pagamentoPendenteQueue).to(pagamentoExchange).with(pagamentoPendenteRoutingKey);
     }
 
     @Bean
-    public Binding pagamentoAprovadoBinding(Queue pagamentoAprovadoQueue, DirectExchange pagamentoExchange) {
+    public Binding pagamentoAprovadoBinding(
+        @Qualifier("pagamentoAprovadoQueue") Queue pagamentoAprovadoQueue,
+        @Qualifier("pagamentoExchange") DirectExchange pagamentoExchange
+    ) {
         return BindingBuilder.bind(pagamentoAprovadoQueue).to(pagamentoExchange).with(pagamentoAprovadoRoutingKey);
     }
 
     @Bean
-    public Binding pagamentoRejeitadoBinding(Queue pagamentoRejeitadoQueue, DirectExchange pagamentoExchange) {
+    public Binding pagamentoRejeitadoBinding(
+        @Qualifier("pagamentoRejeitadoQueue") Queue pagamentoRejeitadoQueue,
+        @Qualifier("pagamentoExchange") DirectExchange pagamentoExchange
+    ) {
         return BindingBuilder.bind(pagamentoRejeitadoQueue).to(pagamentoExchange).with(pagamentoRejeitadoRoutingKey);
+    }
+
+    @Bean
+    public Binding pedidoCriadoBinding(
+        @Qualifier("pedidoCriadoQueue") Queue pedidoCriadoQueue,
+        @Qualifier("pedidoCriadoExchange") DirectExchange pedidoCriadoExchange
+    ) {
+        return BindingBuilder.bind(pedidoCriadoQueue).to(pedidoCriadoExchange).with(pedidoCriadoRoutingKey);
     }
 
     @Bean
@@ -107,6 +146,21 @@ public class BeansConfiguracao {
     @Bean
     EventoPagamentoAprovado eventoPagamentoAprovado(RabbitTemplate rabbitTemplate) {
         return new PagamentoAprovado(rabbitTemplate, pagamentoExchange, pagamentoAprovadoRoutingKey);
+    }
+
+    @Bean
+    RealizarPagamentoUseCase realizarPagamentoUseCase(
+        PagamentoExternoService pagamentoExternoService, 
+        EventoPagamentoPendente eventoPagamentoPendente, 
+        EventoPagamentoAprovado eventoPagamentoAprovado, 
+        EventoPagamentoRejeitado eventoPagamentoRejeitado
+    ) {
+        return new RealizarPagamentoUseCase(pagamentoExternoService, eventoPagamentoPendente, eventoPagamentoAprovado, eventoPagamentoRejeitado);
+    }
+
+    @Bean
+    PedidoCriadoConsumer pedidoCriadoConsumer(RealizarPagamentoUseCase realizarPagamentoUseCase) {
+        return new PedidoCriadoConsumer(realizarPagamentoUseCase);
     }
 
 
