@@ -1,7 +1,7 @@
 package com.luizen.pedido.infra.config;
 
-import com.luizen.pedido.aplicacao.entrada.pedido.RealizarPedidoUseCase;
 import com.luizen.pedido.aplicacao.entrada.produto.ProdutoApplicationService;
+import com.luizen.pedido.aplicacao.entrada.realizarPedido.RealizarPedidoUseCase;
 import com.luizen.pedido.aplicacao.entrada.token.TokenService;
 import com.luizen.pedido.aplicacao.saida.EventoPedidoCriado;
 import com.luizen.pedido.dominio.repositories.PedidoRepository;
