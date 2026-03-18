@@ -1,4 +1,4 @@
-package com.luizen.pedido.aplicacao.entrada.pedido;
+package com.luizen.pedido.aplicacao.entrada.realizarPedido;
 
 import java.math.BigDecimal;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.luizen.pedido.aplicacao.entrada.pedido;
+package com.luizen.pedido.aplicacao.entrada.realizarPedido;
 
 import java.util.List;
 
