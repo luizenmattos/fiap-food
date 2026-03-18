@@ -23,10 +23,11 @@ public class PedidoCriadoProduces implements EventoPedidoCriado{
     }
 
     @Override
-    public void dispararEvento(String pedidoId, BigDecimal valorTotal) {
+    public void dispararEvento(String pedidoId, BigDecimal valorTotal, String clienteId) {
         var evento = Map.of(
             "pedidoId", pedidoId,
-            "valorTotal", valorTotal
+            "valorTotal", valorTotal,
+            "clienteId", clienteId
         );
 
         rabbitTemplate.convertAndSend(exchange, routingKey, evento);
@@ -34,6 +35,7 @@ public class PedidoCriadoProduces implements EventoPedidoCriado{
         logger.info(MyLoggerMessage.of("SUCESSO", "EVENTO_PEDIDO_CRIADO_PUBLICADO", Map.of(
             "pedidoId", pedidoId,
             "valorTotal", valorTotal.toPlainString(),
+            "clienteId", clienteId,
             "exchange", exchange,
             "routingKey", routingKey
         )));

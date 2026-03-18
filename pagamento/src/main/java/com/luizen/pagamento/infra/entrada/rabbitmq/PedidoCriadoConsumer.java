@@ -19,9 +19,10 @@ public class PedidoCriadoConsumer {
     public void consumir(Map<String, Object> evento) {
 
         String pedidoId = evento.get("pedidoId") != null ? evento.get("pedidoId").toString() : "desconhecido";
+        String clienteId = evento.get("clienteId") != null ? evento.get("clienteId").toString() : "";
         BigDecimal valorTotal = converterParaBigDecimal(evento.get("valorTotal"));
 
-        realizarPagamentoUseCase.executar(valorTotal, "Pagamento referente ao pedido " + pedidoId);
+        realizarPagamentoUseCase.executar(valorTotal, pedidoId, clienteId);
     }
 
     private BigDecimal converterParaBigDecimal(Object valor) {

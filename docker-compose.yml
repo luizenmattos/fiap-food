@@ -1,4 +1,12 @@
 services:
+  procpag:
+    image: docker.io/erickemprobr/procpag:latest
+    platform: linux/amd64
+    ports:
+      - "8089:8089"
+    networks:
+      - fase3net
+
   autenticacao-db:
     image: postgres:16-alpine
     container_name: autenticacao-db
@@ -13,6 +21,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - fase3net
 
   autenticacao-service:
     build:
@@ -28,6 +38,8 @@ services:
       SPRING_DATASOURCE_PASSWORD: psql
       SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
       API_SECURITY_TOKEN_SECRET: minha_chave_super_secreta_jwt_123
+    networks:
+      - fase3net
 
   pedido-db:
     image: postgres:16-alpine
@@ -43,6 +55,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - fase3net
 
   pedido-service: 
     build:
@@ -64,6 +78,8 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
+    networks:
+      - fase3net
 
   pagamento-service:
     build:
@@ -73,11 +89,16 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      procpag:
+        condition: service_started
     environment:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
+      APP_PAGAMENTO_EXTERNO_URL: http://procpag:8089/requisicao
+    networks:
+      - fase3net
 
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
@@ -90,6 +111,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - fase3net
 
   kong:
     image: kong:3.8
@@ -110,7 +133,12 @@ services:
       KONG_ADMIN_LISTEN: 0.0.0.0:8001
     volumes:
       - ./kong/kong.yml:/etc/kong/kong.yml:ro
+    networks:
+      - fase3net
 
 volumes:
   autenticacao-data:
   pedido-data:
+
+networks:
+  fase3net:

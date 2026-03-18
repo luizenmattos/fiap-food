@@ -16,6 +16,6 @@ public class VerificarStatusPagamentoJob {
 
     @Scheduled(fixedDelay = 60000) // Executa a cada 60 segundos
     public void verificarStatusPagamento() {
-        verificarStatusPagamento.executar();
+        // verificarStatusPagamento.executar(); //TODO: NAO PODE VERIFICAR SE O PAGAMENTO ESTA ARPOVADO
     }
 }

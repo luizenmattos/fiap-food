@@ -4,5 +4,5 @@ import java.math.BigDecimal;
 
 public interface EventoPedidoCriado {
     
-    void dispararEvento (String pedidoId, BigDecimal valorTotal);
+    void dispararEvento (String pedidoId, BigDecimal valorTotal, String clienteId);
 }

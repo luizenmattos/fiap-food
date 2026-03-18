@@ -22,10 +22,10 @@ public class RealizarPagamentoUseCase {
         this.eventoPagamentoRejeitado = eventoPagamentoRejeitado;
     }
 
-    public Pagamento executar(BigDecimal valor, String descricao) {
-        Pagamento pagamento = Pagamento.criarPagamentoPendente(valor, descricao);
+    public Pagamento executar(BigDecimal valor, String pagamentoId, String clienteId) {
+        Pagamento pagamento = Pagamento.criarPagamentoPendente(valor, "Pagamento referente ao pedido " + pagamentoId);
         
-        boolean pagamentoRealizado = pagamentoExternoService.realizarPagamento();
+        boolean pagamentoRealizado = pagamentoExternoService.realizarPagamento(valor, pagamentoId, clienteId);
         if(pagamentoRealizado) {
             pagamento.aprovar();
         } 

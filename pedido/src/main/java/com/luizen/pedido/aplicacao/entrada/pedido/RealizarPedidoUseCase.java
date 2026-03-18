@@ -70,7 +70,7 @@ public class RealizarPedidoUseCase {
                     )).toList().toString()
             )));
             
-            eventoPedidoCriado.dispararEvento(pedidoSalvo.getId().toString(), pedidoSalvo.valorTotal());
+            eventoPedidoCriado.dispararEvento(pedidoSalvo.getId().toString(), pedidoSalvo.valorTotal(), pedidoSalvo.getClienteId());
 
             return pedidoSalvo;
             

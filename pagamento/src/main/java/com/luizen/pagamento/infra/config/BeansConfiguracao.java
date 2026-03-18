@@ -165,8 +165,10 @@ public class BeansConfiguracao {
 
 
     @Bean
-    PagamentoExternoService pagamentoExternoService(){
-        return new PagamentoExternoFiapService();
+    PagamentoExternoService pagamentoExternoService(
+        @Value("${app.pagamento-externo.url:http://localhost:8089/requisicao}") String pagamentoExternoUrl
+    ){
+        return new PagamentoExternoFiapService(pagamentoExternoUrl);
     }
     
     @Bean
