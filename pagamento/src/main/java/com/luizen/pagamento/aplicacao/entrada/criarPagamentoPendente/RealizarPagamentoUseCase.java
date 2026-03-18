@@ -7,6 +7,7 @@ import com.luizen.pagamento.aplicacao.saida.eventoPagamentoPendente.EventoPagame
 import com.luizen.pagamento.aplicacao.saida.eventoPagamentoRejeitado.EventoPagamentoRejeitado;
 import com.luizen.pagamento.aplicacao.saida.servicoPagamentoExterno.PagamentoExternoService;
 import com.luizen.pagamento.dominio.Pagamento;
+import com.luizen.pagamento.dominio.PagamentoRepository;
 
 public class RealizarPagamentoUseCase {
     
@@ -14,33 +15,35 @@ public class RealizarPagamentoUseCase {
     public PagamentoExternoService pagamentoExternoService;
     public EventoPagamentoPendente eventoPagamentoPendente;
     public EventoPagamentoAprovado eventoPagamentoAprovado;
+    public PagamentoRepository pagamentoRepositorio;
     
-    public RealizarPagamentoUseCase(PagamentoExternoService pagamentoExternoService, EventoPagamentoPendente eventoPagamentoPendente, EventoPagamentoAprovado eventoPagamentoAprovado, EventoPagamentoRejeitado eventoPagamentoRejeitado) {
+    public RealizarPagamentoUseCase(PagamentoExternoService pagamentoExternoService, EventoPagamentoPendente eventoPagamentoPendente, EventoPagamentoAprovado eventoPagamentoAprovado, EventoPagamentoRejeitado eventoPagamentoRejeitado, PagamentoRepository pagamentoRepositorio) {
         this.pagamentoExternoService = pagamentoExternoService; 
         this.eventoPagamentoPendente = eventoPagamentoPendente;
         this.eventoPagamentoAprovado = eventoPagamentoAprovado;
         this.eventoPagamentoRejeitado = eventoPagamentoRejeitado;
+        this.pagamentoRepositorio = pagamentoRepositorio;
     }
 
-    public Pagamento executar(BigDecimal valor, String pagamentoId, String clienteId) {
-        Pagamento pagamento = Pagamento.criarPagamentoPendente(valor, "Pagamento referente ao pedido " + pagamentoId);
-        
-        boolean pagamentoRealizado = pagamentoExternoService.realizarPagamento(valor, pagamentoId, clienteId);
-        if(pagamentoRealizado) {
-            pagamento.aprovar();
-        } 
-        
-        // Pagamento pagamentoSalvo = pagamentoRepositorio.salvar(pagamento).orElse(null);
-        Pagamento pagamentoSalvo = pagamento; // Simulando o salvamento do pagamento, já que o repositório não está implementado
-        
+    public Pagamento executar(BigDecimal valor, String pedidoId, String clienteId) {
+        Pagamento pagamento = Pagamento.criarPagamentoPendente(valor, "Pagamento referente ao pedido " + pedidoId, clienteId);
+
+        Pagamento pagamentoSalvo = pagamentoRepositorio.salvar(pagamento).orElse(null);
+
+        pagamentoExternoService.realizarPagamento(
+            pagamentoSalvo.getValor(), 
+            pagamentoSalvo.getId().toString(), 
+            pagamentoSalvo.getClienteId()
+        );
+
         if (pagamentoSalvo.pendente()) {
-            eventoPagamentoPendente.notificarPagamentoPendente("null");
+            eventoPagamentoPendente.notificarPagamentoPendente(pagamentoSalvo.getId().toString());
 
         }else if (pagamentoSalvo.aprovado()) {
-            eventoPagamentoAprovado.notificarPagamentoAprovado("null");
+            eventoPagamentoAprovado.notificarPagamentoAprovado(pagamentoSalvo.getId().toString());
         
         } else if (pagamentoSalvo.rejeitado()) {
-            eventoPagamentoRejeitado.notificarPagamentoRejeitado("null");
+            eventoPagamentoRejeitado.notificarPagamentoRejeitado(pagamentoSalvo.getId().toString());
         }
         
         return pagamentoSalvo;

@@ -81,17 +81,40 @@ services:
     networks:
       - fase3net
 
+  pagamento-db:
+    image: postgres:16-alpine
+    container_name: pagamento-db
+    environment:
+      POSTGRES_DB: pagamento
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: psql
+    volumes:
+      - pagamento-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pagamento"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fase3net
+
   pagamento-service:
     build:
       context: ./pagamento/
       dockerfile: Dockerfile
     container_name: pagamento-service
     depends_on:
+      pagamento-db:
+        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       procpag:
         condition: service_started
     environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://pagamento-db:5432/pagamento
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: psql
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
@@ -139,6 +162,7 @@ services:
 volumes:
   autenticacao-data:
   pedido-data:
+  pagamento-data:
 
 networks:
   fase3net:

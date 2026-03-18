@@ -20,6 +20,7 @@ import com.luizen.pagamento.aplicacao.saida.eventoPagamentoAprovado.EventoPagame
 import com.luizen.pagamento.aplicacao.saida.eventoPagamentoRejeitado.EventoPagamentoRejeitado;
 import com.luizen.pagamento.infra.entrada.rabbitmq.PedidoCriadoConsumer;
 import com.luizen.pagamento.aplicacao.saida.servicoPagamentoExterno.PagamentoExternoService;
+import com.luizen.pagamento.dominio.PagamentoRepository;
 import com.luizen.pagamento.infra.saida.http.PagamentoExternoFiapService;
 import com.luizen.pagamento.infra.saida.rabbitmq.PagamentoAprovado;
 import com.luizen.pagamento.infra.saida.rabbitmq.PagamentoPendente;
@@ -153,9 +154,10 @@ public class BeansConfiguracao {
         PagamentoExternoService pagamentoExternoService, 
         EventoPagamentoPendente eventoPagamentoPendente, 
         EventoPagamentoAprovado eventoPagamentoAprovado, 
-        EventoPagamentoRejeitado eventoPagamentoRejeitado
+        EventoPagamentoRejeitado eventoPagamentoRejeitado,
+        PagamentoRepository pagamentoRepositorio
     ) {
-        return new RealizarPagamentoUseCase(pagamentoExternoService, eventoPagamentoPendente, eventoPagamentoAprovado, eventoPagamentoRejeitado);
+        return new RealizarPagamentoUseCase(pagamentoExternoService, eventoPagamentoPendente, eventoPagamentoAprovado, eventoPagamentoRejeitado, pagamentoRepositorio);
     }
 
     @Bean
