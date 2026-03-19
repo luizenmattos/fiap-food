@@ -26,7 +26,7 @@ public class RealizarPagamentoUseCase {
     }
 
     public Pagamento executar(BigDecimal valor, String pedidoId, String clienteId) {
-        Pagamento pagamento = Pagamento.criarPagamentoPendente(valor, pedidoId, clienteId);
+        Pagamento pagamento = Pagamento.criarPagamentoPendente(valor, clienteId, pedidoId);
 
         Pagamento pagamentoSalvo = pagamentoRepositorio.salvar(pagamento).orElse(null);
 
