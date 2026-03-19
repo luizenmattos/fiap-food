@@ -3,10 +3,12 @@ package com.luizen.pedido.infra.saida.db.repositories;
 import com.luizen.pedido.dominio.Pedido;
 import com.luizen.pedido.dominio.PedidoItem;
 import com.luizen.pedido.dominio.Produto;
+import com.luizen.pedido.dominio.Status;
 import com.luizen.pedido.dominio.repositories.PedidoRepository;
 import com.luizen.pedido.infra.saida.db.entidades.PedidoEntity;
 import com.luizen.pedido.infra.saida.db.entidades.PedidoItemEntity;
 import com.luizen.pedido.infra.saida.db.entidades.ProdutoEntity;
+import com.luizen.pedido.infra.saida.db.entidades.StatusEntity;
 import com.luizen.pedido.infra.saida.db.jpa.PedidoJpa;
 
 import org.springframework.stereotype.Repository;
@@ -31,6 +33,24 @@ public class PedidoRepositoryImpl implements PedidoRepository {
         return Optional.of(toDomain(savedEntity));
     }
 
+    @Override
+    public Optional<Pedido> obterPorId(UUID id) {
+        Optional<PedidoEntity> entityOpt = pedidoJpaRepository.findById(id);
+        return entityOpt.map(this::toDomain);
+    }
+
+    @Override
+    public void atualizarStatus(UUID pedidoId, String novoStatus) {
+        Optional<PedidoEntity> entityOpt = pedidoJpaRepository.findById(pedidoId);
+        if (entityOpt.isPresent()) {
+            PedidoEntity entity = entityOpt.get();
+            entity.status = StatusEntity.valueOf(novoStatus);
+            pedidoJpaRepository.save(entity);
+        } else {
+            throw new RuntimeException("Pedido não encontrado");
+        }
+    }
+
     private Pedido toDomain(PedidoEntity entity) {
         List<PedidoItem> itens = entity.itens.stream()
             .map(itemEntity -> PedidoItem.carregarDados(
@@ -39,7 +59,13 @@ public class PedidoRepositoryImpl implements PedidoRepository {
                 itemEntity.quantidade
             )).toList();
             
-        return Pedido.carregarDados(entity.id, entity.clienteId.toString(), entity.restauranteId.toString(), itens);
+        return Pedido.carregarDados(
+            entity.id, 
+            entity.clienteId.toString(), 
+            entity.restauranteId.toString(), 
+            itens,
+            Status.valueOf(entity.status.name())
+        );
     }
 
     private PedidoEntity toJpa(Pedido pedido) {
@@ -54,8 +80,7 @@ public class PedidoRepositoryImpl implements PedidoRepository {
                 item.getQuantidade(),
                 entity
             )).toList();
+        entity.status = StatusEntity.valueOf(pedido.getStatus().name());
         return entity;
-
-
     }
 }

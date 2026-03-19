@@ -10,20 +10,23 @@ public class Pedido {
     public String clienteId;
     public String restauranteId;
     public List<PedidoItem> itens;
+    public Status status;
 
     public static Pedido novoPedido(String clienteId, String restauranteId) {
         Pedido pedido = new Pedido();
         pedido.clienteId = clienteId;
         pedido.restauranteId = restauranteId;
+        pedido.status = Status.PENDENTE;
         return pedido;
     }
 
-    public static Pedido carregarDados(UUID id, String clienteId, String restauranteId, List<PedidoItem> itens) {
+    public static Pedido carregarDados(UUID id, String clienteId, String restauranteId, List<PedidoItem> itens, Status status) {
         Pedido pedido = new Pedido();
         pedido.id = id;
         pedido.clienteId = clienteId;
         pedido.restauranteId = restauranteId;
         pedido.itens = itens;
+        pedido.status = status;
         return pedido;
     }
 
@@ -42,6 +45,22 @@ public class Pedido {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public void aprovar() {
+        this.status = Status.APROVADO;
+    }
+
+    public boolean pendente() {
+        return this.status == Status.PENDENTE;
+    }
+
+    public boolean aprovado() {
+        return this.status == Status.APROVADO;
+    }
+
+    public boolean rejeitado() {
+        return this.status == Status.REJEITADO;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -58,5 +77,7 @@ public class Pedido {
         return itens;
     }
 
-    
+    public Status getStatus() {
+        return status;
+    }
 }

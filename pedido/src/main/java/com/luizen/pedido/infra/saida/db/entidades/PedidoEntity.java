@@ -6,6 +6,7 @@ import java.util.UUID;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,14 +30,18 @@ public class PedidoEntity {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<PedidoItemEntity> itens;
 
+    @Enumerated(jakarta.persistence.EnumType.STRING)
+    public StatusEntity status;
+
     public PedidoEntity() {
     }
 
-    public PedidoEntity(UUID id, UUID clienteId, UUID restauranteId, List<PedidoItemEntity> itens) {
+    public PedidoEntity(UUID id, UUID clienteId, UUID restauranteId, List<PedidoItemEntity> itens, StatusEntity status) {
         this.id = id;
         this.clienteId = clienteId;
         this.restauranteId = restauranteId;
         this.itens = itens;
+        this.status = status;
     }
 
 }
