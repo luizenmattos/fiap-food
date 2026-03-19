@@ -19,8 +19,9 @@ public class PagamentoPendente implements EventoPagamentoPendente {
     }
 
     @Override
-    public void notificarPagamentoPendente(String pagamentoId) {
+    public void notificarPagamentoPendente(String pedidoId, String pagamentoId) {
         var evento = Map.of(
+            "pedidoId", pedidoId,
             "pagamentoId", pagamentoId,
             "status", "PENDENTE_PAGAMENTO"
         );

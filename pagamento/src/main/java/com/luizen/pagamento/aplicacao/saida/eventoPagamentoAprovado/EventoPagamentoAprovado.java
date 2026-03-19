@@ -1,5 +1,5 @@
 package com.luizen.pagamento.aplicacao.saida.eventoPagamentoAprovado;
 
 public interface EventoPagamentoAprovado {
-    void notificarPagamentoAprovado(String pagamentoId);
+    void notificarPagamentoAprovado(String pedidoId, String pagamentoId);
 }

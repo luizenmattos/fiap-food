@@ -19,8 +19,9 @@ public class PagamentoAprovado implements EventoPagamentoAprovado {
     }
 
     @Override
-    public void notificarPagamentoAprovado(String pagamentoId) {
+    public void notificarPagamentoAprovado(String pedidoId, String pagamentoId) {
         var evento = Map.of(
+            "pedidoId", pagamentoId,
             "pagamentoId", pagamentoId,
             "status", "APROVADO"
         );

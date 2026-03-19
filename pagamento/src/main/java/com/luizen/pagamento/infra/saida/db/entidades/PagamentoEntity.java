@@ -17,6 +17,8 @@ public class PagamentoEntity {
     public UUID id;
 
     public String clienteId;
+
+    public String pedidoId;
     
     public BigDecimal valor;
 

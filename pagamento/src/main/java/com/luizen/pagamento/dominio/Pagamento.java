@@ -6,23 +6,26 @@ import java.util.UUID;
 public class Pagamento {
     UUID id;
     String clienteId;
+    String pedidoId;
     BigDecimal valor;
     Status status;
 
-    public static Pagamento criarPagamentoPendente(BigDecimal valor, String descricao, String clienteId) {
+    public static Pagamento criarPagamentoPendente(BigDecimal valor, String clienteId, String pedidoId) {
         Pagamento pagamento = new Pagamento();
         pagamento.clienteId = clienteId;
+        pagamento.pedidoId = pedidoId;  
         pagamento.valor = valor;
         pagamento.status = Status.PENDENTE_PAGAMENTO;
         return pagamento;
     }
 
-    public static Pagamento carregarDaDataBase(UUID id, BigDecimal valor, Status status, String clienteId) {
+    public static Pagamento carregarDaDataBase(UUID id, BigDecimal valor, Status status, String clienteId, String pedidoId) {
         Pagamento pagamento = new Pagamento();
         pagamento.id = id;
         pagamento.valor = valor;
         pagamento.status = status;
         pagamento.clienteId = clienteId;
+        pagamento.pedidoId = pedidoId;
         return pagamento;
     }
 
@@ -64,5 +67,9 @@ public class Pagamento {
 
     public String getClienteId() {
         return clienteId;
+    }
+
+    public String getPedidoId() {
+        return pedidoId;
     }
 }

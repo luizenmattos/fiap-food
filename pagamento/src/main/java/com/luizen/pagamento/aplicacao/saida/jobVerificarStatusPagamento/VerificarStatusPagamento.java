@@ -31,7 +31,7 @@ public class VerificarStatusPagamento {
             if(statusPagamento == Status.APROVADO){
                 pagamento.aprovar();
                 pagamentoRepositorio.salvar(pagamento);
-                eventoPagamentoAprovado.notificarPagamentoAprovado(pagamento.getId().toString());
+                eventoPagamentoAprovado.notificarPagamentoAprovado(pagamento.getPedidoId() ,pagamento.getId().toString());
             }
         }
 

@@ -26,7 +26,7 @@ public class RealizarPagamentoUseCase {
     }
 
     public Pagamento executar(BigDecimal valor, String pedidoId, String clienteId) {
-        Pagamento pagamento = Pagamento.criarPagamentoPendente(valor, "Pagamento referente ao pedido " + pedidoId, clienteId);
+        Pagamento pagamento = Pagamento.criarPagamentoPendente(valor, pedidoId, clienteId);
 
         Pagamento pagamentoSalvo = pagamentoRepositorio.salvar(pagamento).orElse(null);
 
@@ -43,10 +43,10 @@ public class RealizarPagamentoUseCase {
         Pagamento pagamentoAtualizado = pagamentoRepositorio.salvar(pagamentoSalvo).orElse(null);
 
         if (pagamentoAtualizado.pendente()) {
-            eventoPagamentoPendente.notificarPagamentoPendente(pagamentoAtualizado.getId().toString());
+            eventoPagamentoPendente.notificarPagamentoPendente(pagamentoAtualizado.getPedidoId(), pagamentoAtualizado.getId().toString());
 
         }else if (pagamentoAtualizado.aprovado()) {
-            eventoPagamentoAprovado.notificarPagamentoAprovado(pagamentoAtualizado.getId().toString());
+            eventoPagamentoAprovado.notificarPagamentoAprovado(pagamentoAtualizado.getPedidoId(), pagamentoAtualizado.getId().toString());
         
         }
         

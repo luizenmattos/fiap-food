@@ -47,6 +47,7 @@ public class PagamentoRepositoryImpl implements PagamentoRepository {
         var pagamentoEntity = new PagamentoEntity();
         pagamentoEntity.id = pagamento.getId();
         pagamentoEntity.clienteId = pagamento.getClienteId();
+        pagamentoEntity.pedidoId = pagamento.getPedidoId();
         pagamentoEntity.valor = pagamento.getValor();
         pagamentoEntity.status = StatusEntity.valueOf(pagamento.getStatus().name());
         return pagamentoEntity;
@@ -57,7 +58,8 @@ public class PagamentoRepositoryImpl implements PagamentoRepository {
             pagamentoEntity.id, 
             pagamentoEntity.valor, 
             Status.valueOf(pagamentoEntity.status.name()),
-            pagamentoEntity.clienteId
+            pagamentoEntity.clienteId,
+            pagamentoEntity.pedidoId
         );
         return pagamento;
     }
