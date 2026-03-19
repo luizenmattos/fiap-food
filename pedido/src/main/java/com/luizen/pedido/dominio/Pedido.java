@@ -16,7 +16,7 @@ public class Pedido {
         Pedido pedido = new Pedido();
         pedido.clienteId = clienteId;
         pedido.restauranteId = restauranteId;
-        pedido.status = Status.PENDENTE;
+        pedido.status = Status.EM_PROCESSAMENTO;
         return pedido;
     }
 

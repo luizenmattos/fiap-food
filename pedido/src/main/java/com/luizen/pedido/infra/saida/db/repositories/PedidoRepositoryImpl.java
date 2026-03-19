@@ -39,6 +39,11 @@ public class PedidoRepositoryImpl implements PedidoRepository {
         return entityOpt.map(this::toDomain);
     }
 
+    public List<Pedido> listarPorClienteId(UUID clienteId){
+        List<PedidoEntity> entities = pedidoJpaRepository.findByClienteId(clienteId);
+        return entities.stream().map(this::toDomain).toList();
+    }
+
     @Override
     public void atualizarStatus(UUID pedidoId, String novoStatus) {
         Optional<PedidoEntity> entityOpt = pedidoJpaRepository.findById(pedidoId);

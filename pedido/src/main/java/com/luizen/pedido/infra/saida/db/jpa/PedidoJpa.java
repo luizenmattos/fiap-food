@@ -8,4 +8,6 @@ import com.luizen.pedido.infra.saida.db.entidades.PedidoEntity;
 
 public interface PedidoJpa extends JpaRepository<PedidoEntity, UUID> {
 
+    public java.util.List<PedidoEntity> findByClienteId(UUID clienteId);
+
 }

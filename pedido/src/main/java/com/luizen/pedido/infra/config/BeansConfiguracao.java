@@ -1,5 +1,7 @@
 package com.luizen.pedido.infra.config;
 
+import com.luizen.pedido.aplicacao.entrada.consultarPedido.ConsultarPedidoUseCase;
+import com.luizen.pedido.aplicacao.entrada.listarPedido.ListarPedidosUseCase;
 import com.luizen.pedido.aplicacao.entrada.produto.ProdutoApplicationService;
 import com.luizen.pedido.aplicacao.entrada.realizarPedido.RealizarPedidoUseCase;
 import com.luizen.pedido.aplicacao.entrada.token.TokenService;
@@ -68,6 +70,16 @@ public class BeansConfiguracao {
     @Bean
     public EventoPedidoCriado eventoPedidoCriado(RabbitTemplate rabbitTemplate) {
         return new PedidoCriadoProduces(rabbitTemplate, pedidoCriadoExchange, pedidoCriadoRoutingKey);
+    }
+
+    @Bean
+    public ListarPedidosUseCase listarPedidos(PedidoRepository pedidoRepository, TokenService tokenService) {
+        return new ListarPedidosUseCase(pedidoRepository, tokenService);
+    }
+
+    @Bean
+    public ConsultarPedidoUseCase consultarPedido(PedidoRepository pedidoRepository, TokenService tokenService) {
+        return new ConsultarPedidoUseCase(pedidoRepository, tokenService);
     }
 
     @Bean

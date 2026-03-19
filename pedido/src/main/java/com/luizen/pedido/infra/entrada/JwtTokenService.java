@@ -16,7 +16,7 @@ public class JwtTokenService implements TokenService {
     @Value("${api.security.token.secret:chave_padrao_local}")
     private String secret;
 
-    public UsuarioToken obterDadosDoToken(String token) {
+    public UsuarioToken obterDadosEValidarToken(String token) {
         try{
             Algorithm algoritmo = Algorithm.HMAC256(secret);
             DecodedJWT decodedJWT = JWT.require(algoritmo)

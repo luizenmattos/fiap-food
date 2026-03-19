@@ -36,7 +36,7 @@ public class RealizarPedidoUseCase {
     public Pedido executar(RealizarPedidoInput input){
         try{    
             //obter o usuário a partir do token
-            UsuarioToken usuarioToken = tokenService.obterDadosDoToken(input.token());
+            UsuarioToken usuarioToken = tokenService.obterDadosEValidarToken(input.token());
             
             // converter itens do input para Map<UUID, Integer> 
             List<UUID> produtoIds = input.itens().stream().map(item -> UUID.fromString(item.produtoId())).toList();
