@@ -30,22 +30,26 @@ public class RealizarPagamentoUseCase {
 
         Pagamento pagamentoSalvo = pagamentoRepositorio.salvar(pagamento).orElse(null);
 
-        pagamentoExternoService.realizarPagamento(
+        boolean pagamentoRealizado = pagamentoExternoService.realizarPagamento(
             pagamentoSalvo.getValor(), 
             pagamentoSalvo.getId().toString(), 
             pagamentoSalvo.getClienteId()
         );
 
-        if (pagamentoSalvo.pendente()) {
-            eventoPagamentoPendente.notificarPagamentoPendente(pagamentoSalvo.getId().toString());
+        if(pagamentoRealizado) {
+            pagamentoSalvo.aprovar();
+        }
 
-        }else if (pagamentoSalvo.aprovado()) {
-            eventoPagamentoAprovado.notificarPagamentoAprovado(pagamentoSalvo.getId().toString());
+        Pagamento pagamentoAtualizado = pagamentoRepositorio.salvar(pagamentoSalvo).orElse(null);
+
+        if (pagamentoAtualizado.pendente()) {
+            eventoPagamentoPendente.notificarPagamentoPendente(pagamentoAtualizado.getId().toString());
+
+        }else if (pagamentoAtualizado.aprovado()) {
+            eventoPagamentoAprovado.notificarPagamentoAprovado(pagamentoAtualizado.getId().toString());
         
-        } else if (pagamentoSalvo.rejeitado()) {
-            eventoPagamentoRejeitado.notificarPagamentoRejeitado(pagamentoSalvo.getId().toString());
         }
         
-        return pagamentoSalvo;
+        return pagamentoAtualizado;
     }
 }
