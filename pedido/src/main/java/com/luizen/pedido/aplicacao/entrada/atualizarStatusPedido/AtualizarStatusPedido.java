@@ -2,10 +2,13 @@ package com.luizen.pedido.aplicacao.entrada.atualizarStatusPedido;
 
 import java.util.UUID;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.luizen.pedido.dominio.Pedido;
 import com.luizen.pedido.dominio.Status;
 import com.luizen.pedido.dominio.repositories.PedidoRepository;
 
+@Transactional
 public class AtualizarStatusPedido {
     
     private PedidoRepository pedidoRepository;

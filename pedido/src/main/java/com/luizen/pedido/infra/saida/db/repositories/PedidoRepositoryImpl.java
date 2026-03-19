@@ -28,11 +28,24 @@ public class PedidoRepositoryImpl implements PedidoRepository {
 
     @Override
     public Optional<Pedido> salvar(Pedido pedido) {
-        PedidoEntity entity = toJpa(pedido);
+        PedidoEntity entity = null;
+        if(pedido.getId()!=null){
+            entity = pedidoJpaRepository.findById(pedido.getId()).get();
+        }else{
+            entity = new PedidoEntity();
+        }    
+
+        // dados básicos
+        entity.id = pedido.id;
+        entity.clienteId = UUID.fromString(pedido.clienteId);
+        entity.restauranteId = UUID.fromString(pedido.restauranteId);
+        entity.status = StatusEntity.valueOf(pedido.getStatus().name());
+
+        atualizarItens(entity, pedido);
+
         PedidoEntity savedEntity = pedidoJpaRepository.save(entity);
         return Optional.of(toDomain(savedEntity));
     }
-
     @Override
     public Optional<Pedido> obterPorId(UUID id) {
         Optional<PedidoEntity> entityOpt = pedidoJpaRepository.findById(id);
@@ -73,19 +86,27 @@ public class PedidoRepositoryImpl implements PedidoRepository {
         );
     }
 
-    private PedidoEntity toJpa(Pedido pedido) {
-        PedidoEntity entity = new PedidoEntity();
-        entity.id = pedido.id;
-        entity.clienteId = UUID.fromString(pedido.clienteId);
-        entity.restauranteId = UUID.fromString(pedido.restauranteId);
-        entity.itens = pedido.getItens().stream()
-            .map(item -> new PedidoItemEntity(
-                item.getId(),
-                new ProdutoEntity(item.getProduto().getId(), item.getProduto().getNome(), item.getProduto().getPreco()),
+    private void atualizarItens(PedidoEntity entity, Pedido pedido) {
+        if(pedido.getItens() == null) {
+            return;
+        }
+        if(entity.itens != null) {
+            return;
+        }
+        entity.itens = new java.util.ArrayList<>();
+        for (PedidoItem item : pedido.getItens()) {
+            PedidoItemEntity itemEntity = new PedidoItemEntity(
+                item.getId(), 
+                new ProdutoEntity(
+                    item.getProduto().getId(),
+                    item.getProduto().getNome(),
+                    item.getProduto().getPreco()
+                ),
                 item.getQuantidade(),
                 entity
-            )).toList();
-        entity.status = StatusEntity.valueOf(pedido.getStatus().name());
-        return entity;
+            );
+
+            entity.itens.add(itemEntity);
+        }
     }
 }
