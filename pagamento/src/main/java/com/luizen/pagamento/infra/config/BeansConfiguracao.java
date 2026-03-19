@@ -174,8 +174,8 @@ public class BeansConfiguracao {
     }
     
     @Bean
-    VerificarStatusPagamento verificarStatusPagamento(PagamentoExternoService pagamentoExternoService, EventoPagamentoAprovado eventoPagamentoAprovado, EventoPagamentoRejeitado eventoPagamentoRejeitado) {
-        return new VerificarStatusPagamento(pagamentoExternoService, eventoPagamentoAprovado, eventoPagamentoRejeitado);
+    VerificarStatusPagamento verificarStatusPagamento(PagamentoRepository pagamentoRepositorio, PagamentoExternoService pagamentoExternoService, EventoPagamentoAprovado eventoPagamentoAprovado, EventoPagamentoRejeitado eventoPagamentoRejeitado) {
+        return new VerificarStatusPagamento(pagamentoRepositorio, pagamentoExternoService, eventoPagamentoAprovado, eventoPagamentoRejeitado);
     }
 
 }

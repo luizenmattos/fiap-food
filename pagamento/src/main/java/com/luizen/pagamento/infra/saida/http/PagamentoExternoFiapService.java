@@ -48,8 +48,25 @@ public class PagamentoExternoFiapService implements PagamentoExternoService {
 
     @Override
     public Status verificarStatusPagamento(String pagamentoId) {
-        System.out.println("Verificando status do pagamento via serviço externo da FIAP...");
-        return Status.APROVADO;
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(pagamentoExternoUrl+"/"+pagamentoId))
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+            HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("Resposta do serviço ver FIAP: " + response.statusCode() + " - " + response.body());
+            
+            return response.body().contains("pago") ? Status.APROVADO : Status.PENDENTE_PAGAMENTO;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Erro ao verificar status do pagamento via serviço externo da FIAP: " + e.getMessage());
+            return Status.PENDENTE_PAGAMENTO;
+        }
     }
     
 }

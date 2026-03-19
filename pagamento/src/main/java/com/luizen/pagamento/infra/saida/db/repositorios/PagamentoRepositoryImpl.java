@@ -1,5 +1,6 @@
 package com.luizen.pagamento.infra.saida.db.repositorios;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.luizen.pagamento.dominio.Pagamento;
 import com.luizen.pagamento.dominio.PagamentoRepository;
+import com.luizen.pagamento.dominio.Status;
 import com.luizen.pagamento.infra.saida.db.entidades.PagamentoEntity;
 import com.luizen.pagamento.infra.saida.db.entidades.StatusEntity;
 import com.luizen.pagamento.infra.saida.db.jpa.PagamentoJpa;
@@ -33,6 +35,13 @@ public class PagamentoRepositoryImpl implements PagamentoRepository {
         var pagamentoEntityOptional = pagamentoJpa.findById(id);
         return pagamentoEntityOptional.map(this::toDomain);
     }
+
+    @Override
+    public List<Pagamento> obterPagamentosPorStatus(Status status) {
+        var statusEntity = StatusEntity.valueOf(status.name());
+        var pagamentosEntity = pagamentoJpa.findByStatus(statusEntity);
+        return pagamentosEntity.stream().map(this::toDomain).toList();
+    }
     
     private PagamentoEntity toJpa(Pagamento pagamento) {
         var pagamentoEntity = new PagamentoEntity();
@@ -47,7 +56,7 @@ public class PagamentoRepositoryImpl implements PagamentoRepository {
         var pagamento = Pagamento.carregarDaDataBase(
             pagamentoEntity.id, 
             pagamentoEntity.valor, 
-            com.luizen.pagamento.dominio.Status.valueOf(pagamentoEntity.status.name()),
+            Status.valueOf(pagamentoEntity.status.name()),
             pagamentoEntity.clienteId
         );
         return pagamento;
