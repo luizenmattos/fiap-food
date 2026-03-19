@@ -2,7 +2,7 @@ package com.luizen.pedido.dominio;
 
 public enum Status {
     EM_PROCESSAMENTO,
-    PENDENTE,
+    PENDENTE_PAGAMENTO,
     APROVADO,
     REJEITADO
 }

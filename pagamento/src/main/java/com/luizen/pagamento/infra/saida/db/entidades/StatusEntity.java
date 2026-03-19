@@ -1,7 +1,7 @@
 package com.luizen.pagamento.infra.saida.db.entidades;
 
 public enum StatusEntity {
-    PENDENTE,
+    PENDENTE_PAGAMENTO,
     APROVADO,
     REJEITADO
 }

@@ -22,7 +22,7 @@ public class PagamentoPendente implements EventoPagamentoPendente {
     public void notificarPagamentoPendente(String pagamentoId) {
         var evento = Map.of(
             "pagamentoId", pagamentoId,
-            "status", "PENDENTE"
+            "status", "PENDENTE_PAGAMENTO"
         );
 
         rabbitTemplate.convertAndSend(exchange, routingKey, evento);

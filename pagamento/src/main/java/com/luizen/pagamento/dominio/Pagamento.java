@@ -13,7 +13,7 @@ public class Pagamento {
         Pagamento pagamento = new Pagamento();
         pagamento.clienteId = clienteId;
         pagamento.valor = valor;
-        pagamento.status = Status.PENDENTE;
+        pagamento.status = Status.PENDENTE_PAGAMENTO;
         return pagamento;
     }
 
@@ -35,17 +35,17 @@ public class Pagamento {
     }
 
     public boolean pendente() {
-        return this.status == Status.PENDENTE;
+        return this.status == Status.PENDENTE_PAGAMENTO;
     }
 
     public void aprovar() {
-        if (this.status == Status.PENDENTE) {
+        if (this.status == Status.PENDENTE_PAGAMENTO) {
             this.status = Status.APROVADO;
         }
     }
 
     public void rejeitar() {
-        if (this.status == Status.PENDENTE) {
+        if (this.status == Status.PENDENTE_PAGAMENTO) {
             this.status = Status.REJEITADO;
         }
     }

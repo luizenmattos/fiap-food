@@ -1,7 +1,7 @@
 package com.luizen.pagamento.dominio;
 
 public enum Status {
-    PENDENTE,
+    PENDENTE_PAGAMENTO,
     APROVADO,
     REJEITADO
 }

@@ -50,7 +50,7 @@ public class Pedido {
     }
 
     public boolean pendente() {
-        return this.status == Status.PENDENTE;
+        return this.status == Status.PENDENTE_PAGAMENTO;
     }
 
     public boolean aprovado() {
