@@ -45,8 +45,16 @@ public class Pedido {
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public void pender() {
+        if(this.status == Status.EM_PROCESSAMENTO){
+            this.status = Status.PENDENTE_PAGAMENTO;
+        }
+    }
+
     public void aprovar() {
-        this.status = Status.APROVADO;
+        if(this.status == Status.EM_PROCESSAMENTO || this.status == Status.PENDENTE_PAGAMENTO){
+            this.status = Status.APROVADO;
+        }
     }
 
     public boolean pendente() {
