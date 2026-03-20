@@ -39,7 +39,7 @@ public class TokenService {
     }
 
     private Instant gerarDataExpiracao() {
-        // Define o token para expirar em 2 horas no fuso horário do Brasil (-03:00)
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        // Define o token para expirar em 30 minutos no fuso horário do Brasil (-03:00)
+        return LocalDateTime.now().plusMinutes(30).toInstant(ZoneOffset.of("-03:00"));
     }
 }
