@@ -1,0 +1,262 @@
+{
+  "info": {
+    "_postman_id": "080444e1-dcd4-48e1-8645-554f32a104ee",
+    "name": "TC03",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "31345798",
+    "_collection_link": "https://go.postman.co/collection/31345798-080444e1-dcd4-48e1-8645-554f32a104ee?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Registrar Usuário",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n        \"nome\":\"LUIZ\",\n        \"email\":\"LUIZ@GMAIL.COM\",\n        \"senha\":\"Senh@F0rte\",\n        \"papel\":\"CLIENTE\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URI}}/registrar",
+          "host": [
+            "{{BASE_URI}}"
+          ],
+          "path": [
+            "registrar"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Autenticar Usuário",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\":\"LUIZ@GMAIL.COM\",\n    \"senha\":\"Senh@F0rte\"\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URI}}/autenticar",
+          "host": [
+            "{{BASE_URI}}"
+          ],
+          "path": [
+            "autenticar"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fazer Pedido",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMdWl6ZW4gQXV0aCBBUEkiLCJzdWIiOiI3ZDMzZGUxOS1mN2Y5LTRhZTctOWRlNS04NDgxNTMxMDk4NzAiLCJwYXBlbCI6IkNMSUVOVEUiLCJleHAiOjE3NzM4OTYyMzJ9.ImR9c80AsXItM0zTgtRXwFm79SfKgTDYQfeRAKcGg50",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"restauranteId\":\"e1a09b98-6939-4cdb-846b-837b8bd0175f\",\n    \"itens\":[\n        {\n            \"produtoId\":\"b43aa00e-8549-425e-84c0-8d8ea6b0ff11\",\n            \"quantidade\":2\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URI}}/pedidos",
+          "host": [
+            "{{BASE_URI}}"
+          ],
+          "path": [
+            "pedidos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listar Pedidos",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMdWl6ZW4gQXV0aCBBUEkiLCJzdWIiOiI3ZDMzZGUxOS1mN2Y5LTRhZTctOWRlNS04NDgxNTMxMDk4NzAiLCJwYXBlbCI6IkNMSUVOVEUiLCJleHAiOjE3NzM4OTYyMzJ9.ImR9c80AsXItM0zTgtRXwFm79SfKgTDYQfeRAKcGg50",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URI}}/pedidos",
+          "host": [
+            "{{BASE_URI}}"
+          ],
+          "path": [
+            "pedidos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar Pedidos",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJMdWl6ZW4gQXV0aCBBUEkiLCJzdWIiOiI3ZDMzZGUxOS1mN2Y5LTRhZTctOWRlNS04NDgxNTMxMDk4NzAiLCJwYXBlbCI6IkNMSUVOVEUiLCJleHAiOjE3NzM4OTYyMzJ9.ImR9c80AsXItM0zTgtRXwFm79SfKgTDYQfeRAKcGg50",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URI}}/pedidos",
+          "host": [
+            "{{BASE_URI}}"
+          ],
+          "path": [
+            "pedidos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listar Produtos",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URI}}/produtos",
+          "host": [
+            "{{BASE_URI}}"
+          ],
+          "path": [
+            "produtos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pagamento Externo",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"valor\":4000,\"pagamento_id\":\"78830219-6680-49ce-9dc0-933d430f306e\",\"cliente_id\":\"60972ca2-fd01-49e8-b803-2d924b4950d1\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8089/requisicao",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8089",
+          "path": [
+            "requisicao"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pagamento Externo",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"valor\":4000,\"pagamento_id\":\"78830219-6680-49ce-9dc0-933d430f306e\",\"cliente_id\":\"60972ca2-fd01-49e8-b803-2d924b4950d1\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8089/requisicao/c04570b9-c1d5-4eb7-8161-20dbb02032c8",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8089",
+          "path": [
+            "requisicao",
+            "c04570b9-c1d5-4eb7-8161-20dbb02032c8"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
